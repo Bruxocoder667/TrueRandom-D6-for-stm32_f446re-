@@ -1,33 +1,60 @@
 /*
- * Author: Nicolas DB
- * Turma 4311 (2022)
+ * Dev name: Nicolas Dias Bohrer
+ * Date: 31/07/2022
+ * @Brief: Prática *
+ * Criar um dado xD6 aleatório
  */
-#include "stm32f4xx.h"
 
+#include "stm32f4xx.h"
+#include <time.h>
+#include <stdlib.h>
+
+#define delay 200000
 void tempo();
-int main(void)
-{
-	RCC->AHB1ENR=0X87; //BAGULHO WTF QUE O ARM PRECISA
-	GPIOC->MODER|=0X5555; //pino C de 0 ao 8 como saída
-	GPIOA->MODER|=0X28000000; //??? tbm precisa disso
-/*
- * No while os pinos de 1 a 8 do GPIOC vão ser setados
- * para 1 sequencialmente e depois voltam sequencialmente
- * a zero pois nós vamos flipar os bits em ordem.
- */
-  while (1){
-	  GPIOC->ODR&=~0X01;tempo();
-	  GPIOC->ODR&=~0X02;tempo();
-	  GPIOC->ODR&=~0X04;tempo();
-	  GPIOC->ODR&=~0X08;tempo();
-	  GPIOC->ODR&=~0X10;tempo();
-	  GPIOC->ODR&=~0X20;tempo();
-	  GPIOC->ODR&=~0X40;tempo();
-	  GPIOC->ODR&=~0X80;tempo();
-  }
+void print();
+
+
+int main(){
+
+	RCC->AHB1ENR=0x87;
+	GPIOA->MODER|=0X28000000;
+	GPIOB->MODER|=0X00000000;
+	GPIOC->MODER|=0X00005555;
+	int k,n;
+
+	while(1){
+		for(k=0;k<20000;k++){
+			if((GPIOB->IDR& 0X20)==0){
+				srand(k);
+				n = (rand() % 6) +1;
+				print(n);
+				tempo();
+
+
+		//for(int i=1;i<=6;i++){
+
+		//}
+
+			}
+		}
+	}
 }
-//Função tempo (queima de tempo) serve como delay
+
+
+void print(int n){
+	switch(n){
+	case 1:GPIOC->ODR=0X08;break;
+	case 2:GPIOC->ODR=0X21;break;
+	case 3:GPIOC->ODR=0X29;break;
+	case 4:GPIOC->ODR=0X35;break;
+	case 5:GPIOC->ODR=0X3D;break;
+	case 6:GPIOC->ODR=0X77;break;
+	}
+}
+
+
+
 void tempo(){
-	int j;
-	for(j=0;j<100000;j++);
+	int j=0;
+	for(j=0;j<delay;j++);
 }
